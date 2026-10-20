@@ -9,23 +9,36 @@ const workerStore = useWorkerStore();
 
 const isSelected = ref(false);
 
-function select() {
-    isSelected.value = !isSelected.value;
-    props.weekNode.needAssign(isSelected.value);
+function onMouseEnter(event: MouseEvent) {
+    if (event.buttons != 1) return
+    toggle();
 }
 
-function unselect() {
+function toggle() {
     if (isSelected.value) {
+        unselect();
+    }
+    else {
         select();
     }
 }
 
-defineExpose({ unselect });
+function select() {
+    isSelected.value = true;
+    props.weekNode.needAssign(true);
+}
+
+function unselect() {
+    isSelected.value = false;
+    props.weekNode.needAssign(false);
+}
+
+defineExpose({ select, unselect });
 
 </script>
 
 <template>
-    <tr @click="select();" :class="{ selected: isSelected }">
+    <tr @mouseenter="onMouseEnter" @mousedown="toggle" :class="{ selected: isSelected }">
         <th>
             {{ getWeekDateStringFromYear(year, weekNode.id) }}
         </th>
@@ -40,7 +53,7 @@ defineExpose({ unselect });
 
 <style lang="css" scoped>
 .selected {
-    border: 2px solid #a3c7f9;
+    border: 1px solid #a3c7f9;
     background-color: #c2dbff;
 }
 </style>

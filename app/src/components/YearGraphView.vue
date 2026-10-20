@@ -13,7 +13,13 @@ workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "F
 
 const childRefs = ref<InstanceType<typeof WeekNodeItem>[] | null>([]);
 
-function unslectAllChild() {
+function selectAllChild() {
+    childRefs.value?.forEach(child => {
+        child.select();
+    });
+}
+
+function unselectAllChild() {
     childRefs.value?.forEach(child => {
         child.unselect();
     });
@@ -29,7 +35,7 @@ function plan() {
 
     if (succeed) {
         // unselect all week items
-        unslectAllChild();
+        unselectAllChild();
     }
 
     console.log(succeed, selectedAmount);
@@ -39,7 +45,8 @@ function plan() {
 
 <template>
     <button @click="plan()">Plannifier</button>
-    <button @click="unslectAllChild()">Déselectionner</button>
+    <button @click="selectAllChild()">Tous selectionner</button>
+    <button @click="unselectAllChild()">Déselectionner</button>
     <table>
         <thead>
             <th>Semaine</th>
@@ -66,6 +73,7 @@ th,
 td {
     border: 1px solid rgb(160 160 160);
     padding: 8px 10px;
+    user-select: none;
 }
 
 td {
