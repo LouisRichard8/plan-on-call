@@ -11,21 +11,35 @@ yearGraph.value.createWeeks(12, 3);
 const workerStore = useWorkerStore();
 workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "Frank", "Benoit"])
 
+const childRefs = ref<InstanceType<typeof WeekNodeItem>[] | null>([]);
+
+function unslectAllChild() {
+    childRefs.value?.forEach(child => {
+        child.unselect();
+    });
+}
+
 function plan() {
     const workers = workerStore.getWorkerOnCall();
     const assistWorkers = workerStore.getWorkerHelper();
 
     let selectedAmount: { worker: number, first: number, second: number }[] = [];
 
-    planGraph(yearGraph.value, workers, assistWorkers, selectedAmount, 20);
+    let succeed = planGraph(yearGraph.value, workers, assistWorkers, selectedAmount, 20);
 
-    console.log(selectedAmount);
+    if (succeed) {
+        // unselect all week items
+        unslectAllChild();
+    }
+
+    console.log(succeed, selectedAmount);
 }
 
 </script>
 
 <template>
     <button @click="plan()">Plannifier</button>
+    <button @click="unslectAllChild()">Déselectionner</button>
     <table>
         <thead>
             <th>Semaine</th>
@@ -33,7 +47,8 @@ function plan() {
             <th>Soutient</th>
         </thead>
         <tbody>
-            <WeekNodeItem v-for="weekNode in yearGraph.weekNodes" :key="weekNode.id" :week-node="weekNode" :year="2026" />
+            <WeekNodeItem ref="childRefs" v-for="weekNode in yearGraph.weekNodes" :key="weekNode.id"
+                :week-node="weekNode" :year="yearGraph.year" />
         </tbody>
     </table>
 </template>

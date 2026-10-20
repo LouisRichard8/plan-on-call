@@ -2,7 +2,7 @@ import type { Worker } from "../models/Worker";
 import { YearGraph } from "../models/YearGraph";
 import { shuffleArray } from "./Utils";
 
-export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[], selectedAmount: { worker: number, first: number, second: number }[], maxTry: number) {
+export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[], selectedAmount: { worker: number, first: number, second: number }[], maxTry: number): boolean {
     graph.resetWeeks();
     let choices: number[] = [];
     let helperChoices: number[] = [];
@@ -31,6 +31,7 @@ export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[]
     while (!complete && nbTry > 0) {
         complete = true;
         graph.weekNodes.forEach(week => {
+            if (!week.toAssign) return;
             shuffleArray(choices);
             for (let j = 0; j < choices.length; j++) {
                 const workerId: number = choices[j] ?? -1;
@@ -52,4 +53,9 @@ export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[]
         });
         nbTry--;
     }
+    graph.weekNodes.forEach(week => {
+        week.needAssign(!complete);
+    });
+
+    return complete;
 }

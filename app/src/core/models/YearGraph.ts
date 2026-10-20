@@ -33,23 +33,12 @@ export class YearGraph {
         console.log(this.weekNodes);
     }
 
-    // resetWeeks(start: number, end: number) {
-    //     for (let i = 0; i < this.weekNodes.length; i++) {
-    //         let m = this.weekNodes[i];
-    //         if (i >= start && i <= end && m !== undefined) {
-    //             m.choice = -1;
-    //             m.secondChoice = -1;
-    //         }
-    //     }
-    // }
-
     resetWeeks() {
-        for (let i = 0; i < this.weekNodes.length; i++) {
-            let m = this.weekNodes[i];
-            if (m !== undefined && m.toAssign) {
-                m.choice = -1;
-                m.secondChoice = -1;
+        this.weekNodes.forEach(week => {
+            if (week.toAssign) {
+                week.choice = -1;
+                week.secondChoice = -1;
             }
-        }
+        })
     }
 }

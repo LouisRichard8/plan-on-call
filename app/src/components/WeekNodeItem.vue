@@ -12,8 +12,15 @@ const isSelected = ref(false);
 function select() {
     isSelected.value = !isSelected.value;
     props.weekNode.needAssign(isSelected.value);
-    console.log(props.weekNode);
 }
+
+function unselect() {
+    if (isSelected.value) {
+        select();
+    }
+}
+
+defineExpose({ unselect });
 
 </script>
 
@@ -33,9 +40,7 @@ function select() {
 
 <style lang="css" scoped>
 .selected {
-    border: 2px solid rgb(153, 255, 255);
-    background-color: rgb(197, 253, 253);
-    color: white;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    border: 2px solid #a3c7f9;
+    background-color: #c2dbff;
 }
 </style>
