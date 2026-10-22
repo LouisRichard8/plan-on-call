@@ -6,6 +6,7 @@ export class YearGraph {
 
     constructor(year: number) {
         this.year = year;
+        this.createWeeks(12, 3);
     }
 
     createWeeks(nbWeeks: number, rest: number) {

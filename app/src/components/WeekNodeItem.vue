@@ -39,15 +39,15 @@ defineExpose({ select, unselect });
 
 <template>
     <tr @mouseenter="onMouseEnter" @mousedown="toggle" :class="{ selected: isSelected }">
-        <th>
+        <td>
             {{ getWeekDateStringFromYear(year, weekNode.id) }}
-        </th>
-        <th>
+        </td>
+        <td>
             {{ weekNode.choice < 0 ? 'Non défini' : workerStore.getWorkerById(weekNode.choice)?.name }} 
-        </th>
-        <th>
+        </td>
+        <td>
             {{ weekNode.secondChoice < 0 ? 'Non défini' : workerStore.getWorkerById(weekNode.secondChoice)?.name }}
-        </th>
+        </td>
     </tr>
 </template>
 

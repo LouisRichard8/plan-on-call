@@ -2,14 +2,8 @@
 import { YearGraph } from '@/core/models/YearGraph';
 import { ref } from 'vue';
 import WeekNodeItem from './WeekNodeItem.vue';
-import { planGraph } from '@/core/utils/GraphUtils.ts';
-import { useWorkerStore } from '@/store/useWorkerStore.ts';
 
-const yearGraph = ref(new YearGraph(2026));
-yearGraph.value.createWeeks(12, 3);
-
-const workerStore = useWorkerStore();
-workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "Frank", "Benoit"])
+const props = defineProps({yearGraph: YearGraph});
 
 const childRefs = ref<InstanceType<typeof WeekNodeItem>[] | null>([]);
 
@@ -25,37 +19,23 @@ function unselectAllChild() {
     });
 }
 
-function plan() {
-    const workers = workerStore.getWorkerOnCall();
-    const assistWorkers = workerStore.getWorkerHelper();
-
-    let selectedAmount: { worker: number, first: number, second: number }[] = [];
-
-    let succeed = planGraph(yearGraph.value, workers, assistWorkers, selectedAmount, 20);
-
-    if (succeed) {
-        // unselect all week items
-        unselectAllChild();
-    }
-
-    console.log(succeed, selectedAmount);
-}
+defineExpose({
+    selectAllChild,
+    unselectAllChild
+});
 
 </script>
 
 <template>
-    <button @click="plan()">Plannifier</button>
-    <button @click="selectAllChild()">Tous selectionner</button>
-    <button @click="unselectAllChild()">Déselectionner</button>
     <table>
         <thead>
             <th>Semaine</th>
-            <th>Technicien <br /> d'Astreinte</th>
+            <th>Technicien <br /> d'astreinte</th>
             <th>Soutient</th>
         </thead>
         <tbody>
-            <WeekNodeItem ref="childRefs" v-for="weekNode in yearGraph.weekNodes" :key="weekNode.id"
-                :week-node="weekNode" :year="yearGraph.year" />
+            <WeekNodeItem ref="childRefs" v-for="weekNode in props.yearGraph?.weekNodes" :key="weekNode.id"
+                :week-node="weekNode" :year="props.yearGraph?.year" />
         </tbody>
     </table>
 </template>
@@ -80,7 +60,4 @@ td {
     text-align: center;
 }
 
-div {
-    padding-bottom: 10px;
-}
 </style>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import YearGraphView from './components/YearGraphView.vue';
+import Header from './components/Header.vue';
+import PlanningBoard from './components/PlanningBoard.vue';
 
 </script>
 
 <template>
-	<YearGraphView />
+	<Header />
+	<PlanningBoard />
 </template>
 
 <style scoped></style>
