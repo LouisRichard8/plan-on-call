@@ -5,6 +5,7 @@ import { useWorkerStore } from '@/store/useWorkerStore';
 import { ref } from 'vue';
 import YearGraphView from './YearGraphView.vue';
 import WorkerAmountView from './WorkerAmountView.vue';
+import ManageDB from './ManageDB.vue';
 
 const yearSelected = ref(2026)
 
@@ -13,7 +14,8 @@ const yearGraph = ref(new YearGraph(yearSelected.value));
 const yearGraphRef = ref<InstanceType<typeof YearGraphView>>();
 
 const workerStore = useWorkerStore();
-workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "Frank", "Benoit"])
+workerStore.fetchWorkers(0);
+// workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "Frank", "Benoit"])
 
 const selectedAmount = ref<{ worker: number, first: number, second: number }[]>([]);
 
@@ -56,17 +58,18 @@ function plan() {
     <div class="menu">
         <button class="button" @click="plan()">Plannifier</button>
         <div>
-            <button @click="changeYear(yearSelected-1)"><</button>
+            <button @click="changeYear(yearSelected - 1)"><</button>
             {{ yearSelected }}
-            <button @click="changeYear(yearSelected+1)">></button>
+            <button @click="changeYear(yearSelected + 1)">></button>
         </div>
         <div>
             <button class="button" @click="selectAllChild()">Tous selectionner</button>
             <button class="button" @click="unselectAllChild()">Déselectionner</button>
         </div>
+        <ManageDB />
     </div>
     <div class="container">
-        <YearGraphView ref="yearGraphRef" :year-graph="yearGraph"/>
+        <YearGraphView ref="yearGraphRef" :year-graph="yearGraph" />
         <WorkerAmountView :worker-amount="selectedAmount" />
     </div>
 
@@ -81,15 +84,15 @@ function plan() {
 }
 
 .button {
-  background-color: grey;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
+    background-color: grey;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .container {

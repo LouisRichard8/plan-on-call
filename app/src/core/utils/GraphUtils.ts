@@ -18,8 +18,8 @@ export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[]
     });
     graph.weekNodes.forEach(week => {
         if (!week.toAssign) {
-            const firstChoice = selectedAmount[week.choice];
-            const secondChoice = selectedAmount[week.secondChoice];
+            const firstChoice = selectedAmount.find(a => a.worker == week.choice);
+            const secondChoice = selectedAmount.find(a => a.worker == week.secondChoice);
             if (firstChoice && secondChoice) {
                 firstChoice.first += 1;
                 secondChoice.second += 1;
@@ -35,17 +35,19 @@ export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[]
             shuffleArray(choices);
             for (let j = 0; j < choices.length; j++) {
                 const workerId: number = choices[j] ?? -1;
-                if (week.check(workerId) && selectedAmount[workerId] && selectedAmount[workerId].first <= selectedAmount[workerId].second) {
+                const amount = selectedAmount.find(a => a.worker == workerId);
+                if (week.check(workerId) && amount && amount.first <= amount.second) {
                     week.choice = workerId;
-                    selectedAmount[workerId].first += 1;
+                    amount.first += 1;
                     break;
                 }
             }
             for (let j = 0; j < helperChoices.length; j++) {
                 const workerId: number = helperChoices[j] ?? -1;
-                if (week.check(workerId) && selectedAmount[workerId] && selectedAmount[workerId].first >= selectedAmount[workerId].second) {
+                const amount = selectedAmount.find(a => a.worker == workerId);
+                if (week.check(workerId) && amount && amount.first >= amount.second) {
                     week.secondChoice = workerId;
-                    selectedAmount[workerId].second += 1;
+                    amount.second += 1;
                     break;
                 }
             }
