@@ -7,15 +7,25 @@ async function initDatabase() {
     if (db !== null) return;
     try {
         const sqlite3 = await sqlite3InitModule();
-        const db = new sqlite3.oo1.OpfsDb(databaseConfig.filename, 'ct');
+        db = new sqlite3.oo1.OpfsDb(databaseConfig.filename, 'ct');
 
         // creation of database tables
         db.exec(databaseConfig.tables.worker.schema);
+        db.exec(databaseConfig.tables.yearGraph.schema);
+        db.exec(databaseConfig.tables.availabality.schema);
+        db.exec(databaseConfig.tables.assignment.schema);
 
         self.postMessage({ type: 'ready' });
     } catch (err: any) {
         self.postMessage({ type: 'init-error', message: err.message });
     }
+}
+
+async function dropDatabase() {
+    db?.exec('DROP TABLE IF EXISTS ' + databaseConfig.tables.worker.name)
+    db?.exec('DROP TABLE IF EXISTS ' + databaseConfig.tables.yearGraph.name)
+    db?.exec('DROP TABLE IF EXISTS ' + databaseConfig.tables.availabality.name)
+    db?.exec('DROP TABLE IF EXISTS ' + databaseConfig.tables.assignment.name)
 }
 
 async function closeDatabase() {
@@ -48,6 +58,9 @@ self.onmessage = ({ data }) => {
     }
     else if (type === 'stop') {
         closeDatabase();
+    }
+    else if (type === 'drop') {
+        dropDatabase();
     }
     else if (type === 'exec') {
         exec(id, sql, bind);

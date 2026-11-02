@@ -55,7 +55,27 @@ export function useSQLite() {
         });
     }
 
+    const dropDatabase = async () => {
+        const msgId = Math.random().toString(36).substring(7);
+        return new Promise((resolve, reject) => {
+            const handler = (e: MessageEvent) => {
+                if (e.data.id === msgId) {
+                    worker.removeEventListener('message', handler);
+                    if (e.data.type === 'error') {
+                        reject(e.data.error);
+                    }
+                    else {
+                        resolve(e.data.result);
+                    }
+                }
+            };
+            worker.addEventListener('message', handler);
+            worker.postMessage({ type: 'drop', id: msgId });
+        });
+    }
+
     return {
         executeQuery,
+        dropDatabase,
     }
 }

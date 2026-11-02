@@ -5,8 +5,8 @@
     <div class="title">
         <h1>Planning astreinte</h1>
         <div>
-            <a class="button">Planning</a>
-            <a class="button">Employers</a>
+            <a href="#/" class="button">Planning</a>
+            <a href="#/workers" class="button">Employers</a>
         </div>
     </div>
 </template>
@@ -22,7 +22,7 @@
     padding: 0px 10px 0px 10px;
 }
 
-.button{
+.button {
     color: white;
     padding: 15px 32px;
     text-align: center;
