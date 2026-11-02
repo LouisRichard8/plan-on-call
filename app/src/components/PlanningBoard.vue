@@ -5,7 +5,6 @@ import { useWorkerStore } from '@/store/useWorkerStore';
 import { ref } from 'vue';
 import YearGraphView from './YearGraphView.vue';
 import WorkerAmountView from './WorkerAmountView.vue';
-import ManageDB from './ManageDB.vue';
 
 const yearSelected = ref(2026)
 
@@ -66,7 +65,6 @@ function plan() {
             <button class="button" @click="selectAllChild()">Tous selectionner</button>
             <button class="button" @click="unselectAllChild()">Déselectionner</button>
         </div>
-        <ManageDB />
     </div>
     <div class="container">
         <YearGraphView ref="yearGraphRef" :year-graph="yearGraph" />

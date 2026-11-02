@@ -3,10 +3,12 @@ import Header from './components/Header.vue';
 import PlanningBoard from './components/PlanningBoard.vue';
 import ManageWorkerView from './components/ManageWorkerView.vue';
 import { computed, ref } from 'vue';
+import ManageDB from './components/ManageDB.vue';
 
 const routes = {
 	'/': PlanningBoard,
-	'/workers': ManageWorkerView
+	'/workers': ManageWorkerView,
+	'/dbmanager' : ManageDB
 }
 
 const currentPath = ref(window.location.hash);
