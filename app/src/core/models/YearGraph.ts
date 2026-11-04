@@ -1,10 +1,12 @@
 import { WeekNode } from "./WeekNode";
 
 export class YearGraph {
+    id: number;
     year: number;
     weekNodes: WeekNode[] = [];
 
-    constructor(year: number) {
+    constructor(id: number, year: number) {
+        this.id = id
         this.year = year;
         this.createWeeks(12, 3);
     }

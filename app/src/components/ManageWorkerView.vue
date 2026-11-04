@@ -4,7 +4,6 @@ import { ref } from 'vue';
 
 const workerStore = useWorkerStore();
 
-workerStore.fetchWorkers(0);
 const name = ref<string>('');
 
 function addWorker() {

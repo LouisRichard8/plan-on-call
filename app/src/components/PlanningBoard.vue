@@ -1,28 +1,19 @@
 <script lang="ts" setup>
-import { YearGraph } from '@/core/models/YearGraph';
 import { planGraph } from '@/core/utils/GraphUtils';
 import { useWorkerStore } from '@/store/useWorkerStore';
 import { ref } from 'vue';
 import YearGraphView from './YearGraphView.vue';
 import WorkerAmountView from './WorkerAmountView.vue';
+import { useYearStore } from '@/store/useYearStore.ts';
 
-const yearSelected = ref(2026)
-
-const yearGraph = ref(new YearGraph(yearSelected.value));
+const yearStore = useYearStore();
 
 const yearGraphRef = ref<InstanceType<typeof YearGraphView>>();
 
 const workerStore = useWorkerStore();
-workerStore.fetchWorkers(0);
 // workerStore.setWorkers(["Jean", "Marc", "Didier", "Paul", "Albert", "Samuel", "Frank", "Benoit"])
 
 const selectedAmount = ref<{ worker: number, first: number, second: number }[]>([]);
-
-function changeYear(newYear: number) {
-    yearSelected.value = newYear;
-    yearGraph.value = new YearGraph(yearSelected.value);
-    selectedAmount.value = [];
-}
 
 function selectAllChild() {
     yearGraphRef.value?.selectAllChild();
@@ -37,7 +28,8 @@ function plan() {
     const assistWorkers = workerStore.getWorkerHelper();
 
     selectedAmount.value = [];
-    let succeed = planGraph(yearGraph.value, workers, assistWorkers, selectedAmount.value, 20);
+    if (yearStore.yearGraph === undefined) return;
+    let succeed = planGraph(yearStore.yearGraph, workers, assistWorkers, selectedAmount.value, 20);
 
     if (succeed) {
         // unselect all week items
@@ -45,21 +37,23 @@ function plan() {
     }
     else {
         // one or more week are not assigned
-        alert("Une ou plusieur affection non pas aboutie !");
+        alert("Une ou plusieur affection n'on pas aboutie !");
     }
 
     console.log(succeed, selectedAmount);
+}
+
+function save() {
+    yearStore.saveYearGraph();
 }
 
 </script>
 
 <template>
     <div class="menu">
-        <button class="button" @click="plan()">Plannifier</button>
         <div>
-            <button @click="changeYear(yearSelected - 1)"><</button>
-            {{ yearSelected }}
-            <button @click="changeYear(yearSelected + 1)">></button>
+            <button class="button" @click="plan()">Plannifier</button>
+            <button class="button" @click="save()">Sauvegarder</button>
         </div>
         <div>
             <button class="button" @click="selectAllChild()">Tous selectionner</button>
@@ -67,7 +61,7 @@ function plan() {
         </div>
     </div>
     <div class="container">
-        <YearGraphView ref="yearGraphRef" :year-graph="yearGraph" />
+        <YearGraphView ref="yearGraphRef" :year-graph="yearStore.yearGraph" />
         <WorkerAmountView :worker-amount="selectedAmount" />
     </div>
 

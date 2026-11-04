@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { YearGraph } from '@/core/models/YearGraph';
 import { ref } from 'vue';
 import WeekNodeItem from './WeekNodeItem.vue';
+import { useYearStore } from '@/store/useYearStore.ts';
 
-const props = defineProps({yearGraph: YearGraph});
+const yearStore = useYearStore();
 
 const childRefs = ref<InstanceType<typeof WeekNodeItem>[] | null>([]);
 
@@ -34,8 +34,8 @@ defineExpose({
             <th>Soutient</th>
         </thead>
         <tbody>
-            <WeekNodeItem ref="childRefs" v-for="weekNode in props.yearGraph?.weekNodes" :key="weekNode.id"
-                :week-node="weekNode" :year="props.yearGraph?.year" />
+            <WeekNodeItem ref="childRefs" v-for="weekNode in yearStore.yearGraph?.weekNodes" :key="weekNode.id"
+                :week-node="weekNode" :year="yearStore.yearGraph?.year" />
         </tbody>
     </table>
 </template>

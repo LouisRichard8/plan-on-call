@@ -1,9 +1,23 @@
 <script lang="ts" setup>
+import { useYearStore } from '@/store/useYearStore';
+
+
+const yearStore = useYearStore();
+
+function changeYear(offset: number) {
+    yearStore.setYear(yearStore.year + offset)
+}
+
 </script>
 
 <template>
     <div class="title">
         <h1>Planning astreinte</h1>
+        <div>
+            <button @click="changeYear(- 1)"><</button>
+            {{ yearStore.year }}
+            <button @click="changeYear(1)">></button>
+        </div>
         <div>
             <a href="#/" class="button">Planning</a>
             <a href="#/workers" class="button">Employers</a>
