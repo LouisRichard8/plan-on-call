@@ -3,6 +3,7 @@ import { YearGraph } from "@/core/models/YearGraph";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useWorkerStore } from "./useWorkerStore";
+import { applyAvoidFromPreviousYear } from "@/core/utils/GraphUtils";
 
 export const useYearStore = defineStore('year', () => {
     const { executeQuery } = useSQLite();
@@ -27,7 +28,13 @@ export const useYearStore = defineStore('year', () => {
                 executeQuery('SELECT * FROM assignment WHERE year = (?);', [yearRows[0].id]).then(weeks => {
                     console.log(weeks);
                     if (!(weeks instanceof Array)) return
+                    const oldGraph = yearGraph.value as YearGraph;
                     yearGraph.value = new YearGraph(yearRows[0].id, year);
+                    console.log(oldGraph);
+                    if (oldGraph !== undefined) {
+                        applyAvoidFromPreviousYear(yearGraph.value, oldGraph);
+                        console.log(yearGraph.value);
+                    }
                     weeks.forEach(week => {
                         const weekNode = yearGraph.value?.weekNodes[week.week];
                         if (weekNode !== undefined) {

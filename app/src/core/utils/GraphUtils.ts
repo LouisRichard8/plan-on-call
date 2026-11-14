@@ -1,5 +1,6 @@
 import type { Worker } from "../models/Worker";
-import { YearGraph } from "../models/YearGraph";
+import { restDay, YearGraph } from "../models/YearGraph";
+import { getNbWeekInYear } from "./DateUtils";
 import { shuffleArray } from "./Utils";
 
 export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[], selectedAmount: { worker: number, first: number, second: number }[], maxTry: number): boolean {
@@ -60,4 +61,32 @@ export function planGraph(graph: YearGraph, workers: Worker[], helpers: Worker[]
     });
 
     return complete;
+}
+
+// Add from the previous year avoiding worker to respect rest day duration
+export function applyAvoidFromPreviousYear(newGraph: YearGraph, oldGraph: YearGraph) {
+    let firstYearGraph: YearGraph;
+    let lastYearGraph: YearGraph;
+
+    if (newGraph.year > oldGraph.year) {
+        firstYearGraph = oldGraph;
+        lastYearGraph = newGraph;
+    }
+    else {
+        firstYearGraph = newGraph;
+        lastYearGraph = oldGraph;
+    }
+
+    const nbWeeks = getNbWeekInYear(firstYearGraph.year);
+
+    for (let i = (nbWeeks - restDay); i < nbWeeks; i++ ){
+        for (let j = 0; j < (restDay + i) % nbWeeks + 1; j++) {
+            const n = (i + nbWeeks - i + j) % nbWeeks;
+            if (n != i && lastYearGraph.weekNodes[n]) {
+                const lastYearWeek = firstYearGraph.weekNodes[i];
+                lastYearGraph.weekNodes[n].avoid.push(lastYearWeek?.choice ?? -1);
+                lastYearGraph.weekNodes[n].avoid.push(lastYearWeek?.secondChoice ?? -1);
+            }
+        }
+    }
 }

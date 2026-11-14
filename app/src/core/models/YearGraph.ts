@@ -1,4 +1,7 @@
+import { getNbWeekInYear } from "../utils/DateUtils";
 import { WeekNode } from "./WeekNode";
+
+export const restDay = 3;
 
 export class YearGraph {
     id: number;
@@ -8,7 +11,7 @@ export class YearGraph {
     constructor(id: number, year: number) {
         this.id = id
         this.year = year;
-        this.createWeeks(12, 3);
+        this.createWeeks(getNbWeekInYear(year), restDay);
     }
 
     createWeeks(nbWeeks: number, rest: number) {
@@ -23,17 +26,16 @@ export class YearGraph {
                     this.weekNodes[n].addNeighbor(m);
                 }
             }
-            if (i >= (nbWeeks - rest)) {
-                for (let j = 0; j < (rest + i) % nbWeeks + 1; j++) {
-                    const n = (i + nbWeeks - i + j) % nbWeeks;
-                    if (n != i && this.weekNodes[n]) {
-                        m.addNeighbor(this.weekNodes[n]);
-                        this.weekNodes[n].addNeighbor(m);
-                    }
-                }
-            }
+            // if (i >= (nbWeeks - rest)) {
+            //     for (let j = 0; j < (rest + i) % nbWeeks + 1; j++) {
+            //         const n = (i + nbWeeks - i + j) % nbWeeks;
+            //         if (n != i && this.weekNodes[n]) {
+            //             m.addNeighbor(this.weekNodes[n]);
+            //             this.weekNodes[n].addNeighbor(m);
+            //         }
+            //     }
+            // }
         }
-        console.log(this.weekNodes);
     }
 
     resetWeeks() {
